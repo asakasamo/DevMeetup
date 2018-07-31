@@ -40,26 +40,15 @@
 <script>
 export default {
    data() {
-      return {
-         meetups: [
-            {
-               imageURL:
-                  "https://c1.staticflickr.com/8/7610/17149522281_3b6ae4c948_b.jpg",
-               id: "1",
-               title: "Meetup in NY"
-            },
-            {
-               imageURL:
-                  "https://c1.staticflickr.com/9/8233/8586789587_c5f7ac6079_b.jpg",
-               id: "2",
-               title: "Meetup in Paris"
-            }
-         ]
-      };
+      return {};
+   },
+   computed: {
+      meetups() {
+         return this.$store.getters.featuredMeetups;
+      }
    },
    methods: {
       goToMeetup(id) {
-         console.log("What");
          this.$router.push("/meetups/" + id);
       }
    }

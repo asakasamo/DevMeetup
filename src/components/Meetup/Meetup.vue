@@ -7,20 +7,20 @@
                <!-- Meetup Title -->
                <v-card-title>
                   <h1 class="primary--text">
-                     (Meetup Title)
+                     {{ meetup.title }}
                   </h1>
                </v-card-title>
 
                <!-- Meetup image -->
                <v-card-media
-                  src="https://c1.staticflickr.com/8/7610/17149522281_3b6ae4c948_b.jpg"
+                  :src="meetup.imageURL"
                   height="400px"
                   >
                </v-card-media>
 
                <!-- Meetup description -->
                <v-card-text>
-                  <div class="info--text">(Meetup Date) (Meetup Location)</div>
+                  <div class="info--text">{{ meetup.date }} - (Meetup Location)</div>
                   <div>
                      (Meetup description)
                   </div>
@@ -37,3 +37,14 @@
       </v-layout>
    </v-container>
 </template>
+
+<script>
+export default {
+   props: ["id"],
+   computed: {
+      meetup() {
+         return this.$store.getters.loadedMeetup(this.id);
+      }
+   }
+};
+</script>
