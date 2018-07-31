@@ -3,21 +3,22 @@
       <!-- Explore/Organize Meetup buttons -->
       <v-layout row wrap>
          <v-flex xs12 sm6 class="text-sm-right text-xs-center">
-            <v-btn large router to="/meetups" class="info">Explore Meetups</v-btn>
+            <v-btn large to="/meetups" class="info">Explore Meetups</v-btn>
          </v-flex>
          <v-flex xs12 sm6  class="text-sm-left text-xs-center">
-            <v-btn large router to="/meetup/new" class="success">Organize Meetup</v-btn>
+            <v-btn large to="/meetup/new" class="success">Organize Meetup</v-btn>
          </v-flex>
       </v-layout>
 
 
       <!-- Carousel -->
       <v-layout row wrap class="mt-2">
-         <v-carousel>
+         <v-carousel style="cursor: pointer;">
             <v-carousel-item
                v-for="meetup in meetups"
                v-bind:src="meetup.imageURL"
                :key="meetup.id"
+               @click.native="goToMeetup(meetup.id)"
                >
                <div centered class="carousel-title">
                   {{ meetup.title }}
@@ -44,17 +45,23 @@ export default {
             {
                imageURL:
                   "https://c1.staticflickr.com/8/7610/17149522281_3b6ae4c948_b.jpg",
-               id: "id1",
+               id: "1",
                title: "Meetup in NY"
             },
             {
                imageURL:
                   "https://c1.staticflickr.com/9/8233/8586789587_c5f7ac6079_b.jpg",
-               id: "id2",
+               id: "2",
                title: "Meetup in Paris"
             }
          ]
       };
+   },
+   methods: {
+      goToMeetup(id) {
+         console.log("What");
+         this.$router.push("/meetups/" + id);
+      }
    }
 };
 </script>
