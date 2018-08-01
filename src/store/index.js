@@ -26,7 +26,9 @@ export const store = new Vuex.Store({
             description: "Some other description"
          }
       ],
-      user: null
+      user: null,
+      loading: false,
+      error: null
    },
    mutations: {
       /**
@@ -44,6 +46,32 @@ export const store = new Vuex.Store({
        */
       setUser(state, payload) {
          state.user = payload;
+      },
+
+      /**
+       * Sets the loading state
+       * @param {Object} state
+       * @param {boolean} payload
+       */
+      setLoading(state, payload) {
+         state.loading = payload;
+      },
+
+      /**
+       * Sets the error state
+       * @param {Object} state
+       * @param {Object} payload
+       */
+      setError(state, payload) {
+         state.error = payload;
+      },
+
+      /**
+       * Clears the error state
+       * @param {Object} state
+       */
+      clearError(state) {
+         state.error = null;
       }
    },
    actions: {
@@ -65,9 +93,11 @@ export const store = new Vuex.Store({
       /**
        * Signs up a new user using firebase
        * @param {Object} commit
-       * @param {Object} payload
+       * @param {Object} payload { email, password }
        */
       signUserUp({ commit }, payload) {
+         commit("setLoading", true);
+         commit("clearError");
          firebase
             .auth()
             .createUserWithEmailAndPassword(payload.email, payload.password)
@@ -77,8 +107,11 @@ export const store = new Vuex.Store({
                   registeredMeetups: []
                };
                commit("setUser", newUser);
+               commit("setLoading", false);
             })
             .catch((error) => {
+               commit("setLoading", false);
+               commit("setError", error);
                console.log(error);
             });
       },
@@ -86,9 +119,11 @@ export const store = new Vuex.Store({
       /**
        * Logs a user in
        * @param {Object} commit
-       * @param {Object} payload
+       * @param {Object} payload { email, password }
        */
       logUserIn({ commit }, payload) {
+         commit("setLoading", true);
+         commit("clearError");
          firebase
             .auth()
             .signInWithEmailAndPassword(payload.email, payload.password)
@@ -98,10 +133,20 @@ export const store = new Vuex.Store({
                   registeredMeetups: []
                };
                commit("setUser", newUser);
+               commit("setLoading", false);
             })
             .catch((error) => {
+               commit("setLoading", false);
+               commit("setError", error);
                console.log(error);
             });
+      },
+
+      /**
+       * Clears the error state
+       */
+      clearError({ commit }) {
+         commit("clearError");
       }
    },
    getters: {
@@ -132,12 +177,16 @@ export const store = new Vuex.Store({
             state.loadedMeetups.find((meetup) => meetup.id === meetupId);
       },
 
-      /**
-       * Returns the current active user
-       * @param {Object} state
-       */
       user(state) {
          return state.user;
+      },
+
+      error(state) {
+         return state.error;
+      },
+
+      loading(state) {
+         return state.loading;
       }
    }
 });
