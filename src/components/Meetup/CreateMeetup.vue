@@ -73,6 +73,26 @@
             </v-flex>
          </v-layout>
 
+         <!-- Date & time picker header -->
+         <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+               <h3>Date and time</h3>
+            </v-flex>
+         </v-layout>
+
+         <!-- Date & time picker -->
+         <v-layout row>
+            <v-flex offset-sm3>
+               <v-date-picker v-model="date"></v-date-picker>
+            </v-flex>
+         </v-layout>
+
+         <v-layout row>
+            <v-flex offset-sm3>
+               <v-time-picker v-model="time"></v-time-picker>
+            </v-flex>
+         </v-layout>
+
          <!-- Submit button -->
          <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
@@ -87,16 +107,24 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
    data() {
+      const dateTime = moment();
       return {
          title: "",
          location: "",
          imageURL: "",
-         description: ""
+         description: "",
+         date: dateTime.format("YYYY-MM-DD"),
+         time: dateTime.format("HH:mm")
       };
    },
    computed: {
+      submittableDateTime() {
+         return new Date(this.date + " " + this.time);
+      },
       formIsValid() {
          return (
             this.title && this.location && this.imageURL && this.description
@@ -114,7 +142,7 @@ export default {
             location: this.location,
             imageURL: this.imageURL,
             description: this.description,
-            date: new Date()
+            date: this.submittableDateTime
          };
 
          this.$store.dispatch("createMeetup", meetupData);

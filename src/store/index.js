@@ -12,6 +12,7 @@ export const store = new Vuex.Store({
             id: "1",
             title: "Meetup in NY",
             date: "1/1/2019",
+            location: "New York, NY",
             description: "Some description"
          },
          {
@@ -20,6 +21,7 @@ export const store = new Vuex.Store({
             id: "2",
             title: "Meetup in Paris",
             date: "2/2/2019",
+            location: "Paris, France",
             description: "Some other description"
          }
       ],
