@@ -6,7 +6,7 @@
             <!-- Signup card wrapper -->
             <v-card>
                <v-card-text>
-                  <form>
+                  <form @submit.prevent="submitSignup">
                      <v-layout row>
                         <v-flex xs12>
 
@@ -76,15 +76,23 @@ export default {
          return this.password === this.confirmPassword
             ? true
             : "Passwords do not match";
+      },
+      user() {
+         return this.$store.getters.user;
+      }
+   },
+   watch: {
+      user(value) {
+         if (value) {
+            this.$router.push("/");
+         }
       }
    },
    methods: {
       submitSignup() {
-         // TODO: Vuex store it in the database
-         console.log({
+         this.$store.dispatch("signUserUp", {
             email: this.email,
-            password: this.password,
-            confirmPassword: this.confirmPassword
+            password: this.password
          });
       }
    }
