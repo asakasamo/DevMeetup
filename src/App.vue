@@ -55,21 +55,33 @@
 export default {
    data() {
       return {
-         sideNav: false,
-         menuItems: [
-            {
-               icon: "supervisor_account",
-               title: "View Meetups",
-               link: "/meetups"
-            },
-            { icon: "room", title: "Organize Meetup", link: "/meetup/new" },
-            { icon: "person", title: "Profile", link: "/profile" },
-            { icon: "face", title: "Sign up", link: "/signup" },
-            { icon: "lock_open", title: "Log in", link: "/login" }
-         ]
+         sideNav: false
       };
    },
-   mounted() {}
+   computed: {
+      menuItems() {
+         let menuItems = [
+            { title: "Sign up", icon: "face", link: "/signup" },
+            { title: "Log in", icon: "lock_open", link: "/login" }
+         ];
+         if (this.userIsAuthenticated) {
+            menuItems = [
+               {
+                  title: "View Meetups",
+                  icon: "supervisor_account",
+                  link: "/meetups"
+               },
+               { title: "Organize Meetup", icon: "room", link: "/meetup/new" },
+               { title: "Profile", icon: "person", link: "/profile" }
+            ];
+         }
+
+         return menuItems;
+      },
+      userIsAuthenticated() {
+         return !!this.$store.getters.user;
+      }
+   }
 };
 </script>
 
