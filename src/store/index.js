@@ -11,14 +11,16 @@ export const store = new Vuex.Store({
                "https://c1.staticflickr.com/8/7610/17149522281_3b6ae4c948_b.jpg",
             id: "1",
             title: "Meetup in NY",
-            date: "1/1/2019"
+            date: "1/1/2019",
+            description: "Some description"
          },
          {
             imageURL:
                "https://c1.staticflickr.com/9/8233/8586789587_c5f7ac6079_b.jpg",
             id: "2",
             title: "Meetup in Paris",
-            date: "2/2/2019"
+            date: "2/2/2019",
+            description: "Some other description"
          }
       ],
       user: {
@@ -26,8 +28,31 @@ export const store = new Vuex.Store({
          registeredMeetups: ["registeredMeetups"]
       }
    },
-   mutations: {},
-   actions: {},
+   mutations: {
+      /**
+       * Adds a new meetup to the store
+       * @param {Object} state
+       * @param {Object} payload The new meetup object
+       */
+      createMeetup(state, payload) {
+         state.loadedMeetups.push(payload);
+      }
+   },
+   actions: {
+      createMeetup({ commit }, payload) {
+         const meetup = {
+            id: "99999999",
+            title: payload.title,
+            location: payload.location,
+            imageURL: payload.imageURL,
+            description: payload.description,
+            date: payload.date
+         };
+
+         // Reach out to firebase and store it
+         commit("createMeetup", meetup);
+      }
+   },
    getters: {
       /**
        * Returns the meetups loaded into the store

@@ -20,9 +20,9 @@
 
                <!-- Meetup description -->
                <v-card-text>
-                  <div class="info--text">{{ meetup.date }} - (Meetup Location)</div>
+                  <div class="info--text">{{ meetup.date }} - {{ meetup.location }}</div>
                   <div>
-                     (Meetup description)
+                     {{ meetup.description }}
                   </div>
                </v-card-text>
 
