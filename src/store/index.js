@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
                "https://c1.staticflickr.com/8/7610/17149522281_3b6ae4c948_b.jpg",
             id: "1",
             title: "Meetup in NY",
-            date: "1/1/2019",
+            date: new Date("1/1/2019"),
             location: "New York, NY",
             description: "Some description"
          },
@@ -20,7 +20,7 @@ export const store = new Vuex.Store({
                "https://c1.staticflickr.com/9/8233/8586789587_c5f7ac6079_b.jpg",
             id: "2",
             title: "Meetup in Paris",
-            date: "2/2/2019",
+            date: new Date("2/2/2019"),
             location: "Paris, France",
             description: "Some other description"
          }
