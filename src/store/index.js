@@ -31,6 +31,9 @@ export const store = new Vuex.Store({
       error: null
    },
    mutations: {
+      setLoadedMeetups(state, payload) {
+         state.loadedMeetups = payload;
+      },
       /**
        * Adds a new meetup to the store
        * @param {Object} state
@@ -75,19 +78,56 @@ export const store = new Vuex.Store({
       }
    },
    actions: {
+      loadMeetups({ commit }) {
+         commit("setLoading", true);
+         firebase
+            .database()
+            .ref("meetups")
+            .once("value")
+            .then((data) => {
+               const meetups = [];
+               const obj = data.val();
+               for (let key in obj) {
+                  meetups.push({
+                     id: key,
+                     title: obj[key].title,
+                     descrption: obj[key].descrption,
+                     imageURL: obj[key].imageURL,
+                     date: obj[key].date
+                  });
+               }
+               commit("setLoadedMeetups", meetups);
+               commit("setLoading", false);
+            })
+            .catch((error) => {
+               console.log(error);
+               commit("setLoading", false);
+            });
+      },
       /**
        * Creates a new user
        */
       createMeetup({ commit }, payload) {
          const meetup = {
-            id: "99999999",
             title: payload.title,
             location: payload.location,
             imageURL: payload.imageURL,
             description: payload.description,
-            date: payload.date
+            date: payload.date.toISOString()
          };
          // Reach out to firebase and store it
+         firebase
+            .database()
+            .ref("meetups")
+            .push(meetup)
+            .then((data) => {
+               const key = data.key;
+               commit("createMeetup", { ...meetup, key });
+            })
+            .catch((error) => {
+               console.log(error);
+            });
+
          commit("createMeetup", meetup);
       },
       /**
@@ -129,7 +169,7 @@ export const store = new Vuex.Store({
             .signInWithEmailAndPassword(payload.email, payload.password)
             .then((userCredential) => {
                const newUser = {
-                  id: userCredential.uid,
+                  id: userCredential.user.uid,
                   registeredMeetups: []
                };
                commit("setUser", newUser);

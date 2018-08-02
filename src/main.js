@@ -35,5 +35,7 @@ new Vue({
          projectId: "wemeetup-asakasamo",
          storageBucket: "wemeetup-asakasamo.appspot.com"
       });
+
+      this.$store.dispatch("loadMeetups");
    }
 });
