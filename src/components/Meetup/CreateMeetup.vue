@@ -73,20 +73,21 @@
             </v-flex>
          </v-layout>
 
-         <!-- Date & time picker header -->
+         <!-- Header: Date & time -->
          <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
                <h3>Date and time</h3>
             </v-flex>
          </v-layout>
 
-         <!-- Date & time picker -->
+         <!-- Date picker -->
          <v-layout row>
             <v-flex offset-sm3>
                <v-date-picker v-model="date"></v-date-picker>
             </v-flex>
          </v-layout>
 
+         <!-- Time picker -->
          <v-layout row>
             <v-flex offset-sm3>
                <v-time-picker v-model="time"></v-time-picker>

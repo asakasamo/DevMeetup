@@ -10,6 +10,7 @@
          </v-flex>
       </v-layout>
 
+      <!-- Loading spinner -->
       <v-layout>
          <v-flex xs12 class="text-xs-center">
             <v-progress-circular

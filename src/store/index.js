@@ -94,6 +94,10 @@ export const store = new Vuex.Store({
       }
    },
    actions: {
+      /**
+       * Preloads meetups from the database
+       * @param {Object} commit
+       */
       loadMeetups({ commit }) {
          commit("setLoading", true);
          firebase
