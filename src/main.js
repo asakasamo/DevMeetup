@@ -9,6 +9,7 @@ import "vuetify/dist/vuetify.min.css";
 import DateFilter from "./filters/date";
 import { store } from "./store";
 import AlertCmp from "./components/Shared/Alert.vue";
+import EditMeetupDetailsDialog from "./components/Meetup/Edit/EditMeetupDetailsDialog.vue";
 import "./styles/animations.css";
 
 Vue.use(Vuetify);
@@ -19,6 +20,7 @@ Vue.filter("date", DateFilter);
 
 // Globally register components
 Vue.component("app-alert", AlertCmp);
+Vue.component("app-edit-meetup-details-dialog", EditMeetupDetailsDialog);
 
 /* eslint-disable no-new */
 new Vue({

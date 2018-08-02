@@ -43,6 +43,21 @@ export const store = new Vuex.Store({
          state.loadedMeetups.push(payload);
          console.log(payload);
       },
+
+      /**
+       * Updats a given meetup
+       * @param {Object} state
+       * @param {Object} payload
+       */
+      updateMeetup(state, payload) {
+         const meetup = state.loadedMeetups.find((mu) => mu.id === payload.id);
+
+         // only update if updates are available
+         meetup.title = payload.title || meetup.title;
+         meetup.description = payload.description || meetup.description;
+         meetup.date = payload.date || meetup.date;
+      },
+
       /**
        * Sets the current active user
        * @param {Object} state
@@ -163,6 +178,43 @@ export const store = new Vuex.Store({
 
          commit("createMeetup", meetup);
       },
+
+      /**
+       * Updates a meetup (i.e. from the Edit Meetup component)
+       * @param {Object} commit
+       * @param {Object} payload
+       */
+      updateMeetupData({ commit }, payload) {
+         commit("setLoading", true);
+
+         const updateObj = {};
+         if (payload.title) {
+            updateObj.title = payload.title;
+         }
+         if (payload.description) {
+            updateObj.description = payload.description;
+         }
+         if (payload.date) {
+            updateObj.date = payload.date;
+         }
+
+         // update the meetup in firebase
+         firebase
+            .database()
+            .ref("meetups")
+            .child(payload.id)
+            .update(updateObj)
+            .then(() => {
+               // update the local store
+               commit("updateMeetup", payload);
+               commit("setLoading", false);
+            })
+            .catch((error) => {
+               commit("setLoading", false);
+               console.log(error);
+            });
+      },
+
       /**
        * Signs up a new user using firebase
        * @param {Object} commit
