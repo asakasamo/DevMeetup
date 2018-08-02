@@ -38,24 +38,24 @@
             </v-flex>
          </v-layout>
          
-         <!-- Image URL field -->
+         <!-- Image picker -->
          <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-               <v-text-field 
-                  name="imageURL" 
-                  label="Image URL" 
-                  id="image-url"
-                  required
-                  v-model="imageURL"
+               <v-btn raised class="info" @click="onPickFile">Upload Image</v-btn>
+               <input 
+                  type="file" 
+                  style="display: none" 
+                  ref="fileInput" 
+                  accept="image/*"
+                  @change="onFilePicked"
                   >
-               </v-text-field>
             </v-flex>
          </v-layout>
 
          <!-- Preview image -->
          <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-               <img :src="imageURL" alt="Meetup Image" width="300px">
+               <img :src="imageURL" alt="Meetup Image" width="300px" v-if="imageURL">
             </v-flex>
          </v-layout>
          
@@ -118,7 +118,8 @@ export default {
          imageURL: "",
          description: "",
          date: dateTime.format("YYYY-MM-DD"),
-         time: dateTime.format("HH:mm")
+         time: dateTime.format("HH:mm"),
+         image: null
       };
    },
    computed: {
@@ -127,7 +128,11 @@ export default {
       },
       formIsValid() {
          return (
-            this.title && this.location && this.imageURL && this.description
+            this.title &&
+            this.location &&
+            this.imageURL &&
+            this.description &&
+            this.image
          );
       }
    },
@@ -140,6 +145,7 @@ export default {
          const meetupData = {
             title: this.title,
             location: this.location,
+            image: this.image,
             imageURL: this.imageURL,
             description: this.description,
             date: this.submittableDateTime
@@ -147,6 +153,26 @@ export default {
 
          this.$store.dispatch("createMeetup", meetupData);
          this.$router.push("/meetups");
+      },
+      onPickFile() {
+         this.$refs.fileInput.click();
+      },
+      onFilePicked(event) {
+         const file = event.target.files[0];
+         const filename = file.name;
+
+         // reject the file if it doesn't have an extension
+         if (filename.lastIndexOf(".") <= 0) {
+            return alert("Please select a valid file.");
+         }
+
+         // Convert the file to base64 string
+         const fileReader = new FileReader();
+         fileReader.addEventListener("load", () => {
+            this.imageURL = fileReader.result;
+         });
+         fileReader.readAsDataURL(file);
+         this.image = file;
       }
    }
 };

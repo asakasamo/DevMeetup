@@ -41,6 +41,7 @@ export const store = new Vuex.Store({
        */
       createMeetup(state, payload) {
          state.loadedMeetups.push(payload);
+         console.log(payload);
       },
       /**
        * Sets the current active user
@@ -88,7 +89,6 @@ export const store = new Vuex.Store({
                const meetups = [];
                const obj = data.val();
                for (let key in obj) {
-                  console.log(obj[key]);
                   meetups.push({
                      id: key,
                      title: obj[key].title,
@@ -96,7 +96,7 @@ export const store = new Vuex.Store({
                      description: obj[key].description,
                      imageURL: obj[key].imageURL,
                      date: obj[key].date,
-                     creatorID: obj[key].creatorID
+                     creatorId: obj[key].creatorId
                   });
                }
                commit("setLoadedMeetups", meetups);
@@ -117,15 +117,44 @@ export const store = new Vuex.Store({
             imageURL: payload.imageURL,
             description: payload.description,
             date: payload.date.toISOString(),
-            creatorID: getters.user.id
+            creatorId: getters.user.id
          };
          // Reach out to firebase and store it
+         let key, refPath;
          firebase
             .database()
             .ref("meetups")
-            .push(meetup)
+            .push(meetup) // store the meetup in the database
             .then((data) => {
-               const key = data.key;
+               // get the new meetup's key
+               key = data.key;
+               const filename = payload.image.name;
+               const extension = filename.slice(filename.lastIndexOf("."));
+
+               // store the file in firebase storage as {id}.{extension}
+               refPath = "meetups/" + key + extension;
+               return firebase
+                  .storage()
+                  .ref(refPath)
+                  .put(payload.image);
+            })
+            .then(() =>
+               // fetch the image URL
+               firebase
+                  .storage()
+                  .ref(refPath)
+                  .getDownloadURL()
+            )
+            .then((imageURL) =>
+               // update the database reference with the url
+               firebase
+                  .database()
+                  .ref("meetups")
+                  .child(key)
+                  .update({ imageURL })
+            )
+            .then(() => {
+               // commit the changes to the local store
                commit("createMeetup", { ...meetup, key });
             })
             .catch((error) => {
