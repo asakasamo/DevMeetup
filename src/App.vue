@@ -3,6 +3,7 @@
       <!-- Navigation Drawer -->
       <v-navigation-drawer v-model="sideNav" temporary absolute disable-resize-watcher>
          <v-list>
+            <!-- Navigation links -->
             <v-list-tile 
                v-for="item in menuItems" 
                :key="item.title"
@@ -14,17 +15,33 @@
                   {{ item.title }}
                </v-list-tile-content>
             </v-list-tile>
+
+            <!-- Logout button -->
+            <v-list-tile 
+               v-if="userIsAuthenticated"
+               @click="logOut"
+               >
+               <v-list-tile-action>
+                  <v-icon>exit_to_app</v-icon>
+               </v-list-tile-action>
+               <v-list-tile-content>
+                  Log out
+               </v-list-tile-content>
+            </v-list-tile>
+
          </v-list>
       </v-navigation-drawer>
 
       <!-- Main Navigation Toolbar -->
       <v-toolbar dark class="primary">
+         <!-- Hamburger menu toggle -->
          <v-toolbar-side-icon 
             @click.stop="sideNav = !sideNav"
             class="hidden-sm-and-up"
             >
          </v-toolbar-side-icon> 
 
+         <!-- Homepage link -->
          <v-toolbar-title>
             <router-link to="/" tag="span" style="cursor: pointer">
                Meetup
@@ -33,6 +50,7 @@
          
          <v-spacer></v-spacer>
 
+         <!-- Nav links -->
          <v-toolbar-items class="hidden-xs-only">
             <v-btn 
                flat 
@@ -42,6 +60,16 @@
                >
                <v-icon left>{{ item.icon }}</v-icon>
                {{ item.title }}
+            </v-btn>
+
+            <!-- Logout button -->
+            <v-btn 
+               flat 
+               v-if="userIsAuthenticated"
+               @click="logOut"
+               >
+               <v-icon left>exit_to_app</v-icon>
+               Log out
             </v-btn>
          </v-toolbar-items>
       </v-toolbar>
@@ -80,6 +108,11 @@ export default {
       },
       userIsAuthenticated() {
          return !!this.$store.getters.user;
+      }
+   },
+   methods: {
+      logOut() {
+         this.$store.dispatch("logOut");
       }
    }
 };

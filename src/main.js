@@ -35,6 +35,11 @@ new Vue({
          projectId: "wemeetup-asakasamo",
          storageBucket: "wemeetup-asakasamo.appspot.com"
       });
+      firebase.auth().onAuthStateChanged((user) => {
+         if (user) {
+            this.$store.dispatch("autoLogIn", user);
+         }
+      });
 
       this.$store.dispatch("loadMeetups");
    }

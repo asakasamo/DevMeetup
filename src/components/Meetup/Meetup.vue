@@ -43,7 +43,15 @@ export default {
    props: ["id"],
    computed: {
       meetup() {
-         return this.$store.getters.loadedMeetup(this.id);
+         return (
+            this.$store.getters.loadedMeetup(this.id) || {
+               imageURL: "",
+               title: "Loading...",
+               date: "Loading...",
+               location: "Loading...",
+               description: "Loading..."
+            }
+         );
       }
    }
 };
