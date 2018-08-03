@@ -6,31 +6,52 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
    state: {
-      loadedMeetups: [
-         // {
-         //    imageURL:
-         //       "https://c1.staticflickr.com/8/7610/17149522281_3b6ae4c948_b.jpg",
-         //    id: "1",
-         //    title: "Meetup in NY",
-         //    date: new Date("1/1/2019"),
-         //    location: "New York, NY",
-         //    description: "Some description"
-         // },
-         // {
-         //    imageURL:
-         //       "https://c1.staticflickr.com/9/8233/8586789587_c5f7ac6079_b.jpg",
-         //    id: "2",
-         //    title: "Meetup in Paris",
-         //    date: new Date("2/2/2019"),
-         //    location: "Paris, France",
-         //    description: "Some other description"
-         // }
-      ],
+      loadedMeetups: [], // TODO: Dummy data?
       user: null,
       loading: false,
       error: null
    },
    mutations: {
+      /**
+       * Registers the current user for a given meetup
+       * @param {Object} state
+       * @param {Object} payload the meetup
+       */
+      registerUserForMeetup(state, payload) {
+         const meetupid = payload.id;
+         if (
+            state.user.registeredMeetups.findIndex(
+               (meetup) => meetup.id === meetupid
+            ) >= 0
+         ) {
+            return;
+         }
+
+         // store the meetup id
+         state.user.registeredMeetups.push(meetupid);
+
+         // store the firebase reference to the meetup registration
+         state.user.fbRegistrationKeys[meetupid] = payload.fbRegistrationKey;
+      },
+
+      /**
+       * Unregisters a the current user from a given meetup
+       * @param {Object} state
+       * @param {string} payload the meetup id
+       */
+      unregisterUserFromMeetup(state, payload) {
+         const registeredMeetups = state.user.registeredMeetups;
+
+         // Remove the registered meetup from the registeredMeetups array
+         registeredMeetups.splice(
+            registeredMeetups.findIndex((meetup) => meetup.id === payload),
+            1
+         );
+
+         // Delete the firebase reference to the meetup registration
+         Reflect.deleteProperty(state.user.fbRegistrationKeys, payload);
+      },
+
       setLoadedMeetups(state, payload) {
          state.loadedMeetups = payload;
       },
@@ -94,6 +115,55 @@ export const store = new Vuex.Store({
       }
    },
    actions: {
+      /**
+       * Registers a user for a meetup
+       * @param {Object} commit
+       * @param {Object} payload the meetup id
+       */
+      registerUserForMeetup({ commit, getters }, payload) {
+         commit("setLoading", true);
+         const user = getters.user;
+
+         firebase
+            .database()
+            .ref("/users/" + user.id)
+            .child("/registrations/")
+            .push(payload) // add the meetup to /users/registrations/
+            .then((data) => {
+               commit("registerUserForMeetup", {
+                  id: payload,
+                  fbRegistrationKey: data.key // the firebase id of the registration
+               });
+               commit("setLoading", false);
+            })
+            .catch((error) => {
+               commit("setLoading", false);
+               console.log(error);
+            });
+      },
+      /**
+       * Unregisters a user from a meetup
+       */
+      unregisterUserFromMeetup({ commit, getters }, payload) {
+         commit("setLoading", true);
+         const user = getters.user;
+
+         if (!user.fbRegistrationKeys) {
+            return;
+         }
+         const fbRegistrationKey = user.fbRegistrationKeys[payload];
+         firebase.database
+            .ref("/users/" + user.id + "/registrations") // go to the registration
+            .child(fbRegistrationKey)
+            .remove() // remove the registration from the database
+            .then(() => {
+               commit("unregisterUserFromMeetup", payload);
+               commit("setLoading", false);
+            })
+            .catch((error) => {
+               console.log(error);
+            });
+      },
       /**
        * Preloads meetups from the database
        * @param {Object} commit
@@ -233,7 +303,8 @@ export const store = new Vuex.Store({
             .then((userCredential) => {
                const newUser = {
                   id: userCredential.user.uid,
-                  registeredMeetups: []
+                  registeredMeetups: [],
+                  fbRegistrationKeys: {}
                };
                commit("setUser", newUser);
                commit("setLoading", false);
@@ -259,7 +330,8 @@ export const store = new Vuex.Store({
             .then((userCredential) => {
                const newUser = {
                   id: userCredential.user.uid,
-                  registeredMeetups: []
+                  registeredMeetups: [],
+                  fbRegistrationKeys: {}
                };
                commit("setUser", newUser);
                commit("setLoading", false);
@@ -284,7 +356,11 @@ export const store = new Vuex.Store({
        * @param {Object} payload
        */
       autoLogIn({ commit }, payload) {
-         commit("setUser", { id: payload.uid, registeredMeetups: [] });
+         commit("setUser", {
+            id: payload.uid,
+            registeredMeetups: [],
+            fbRegistrationKeys: {}
+         });
       },
 
       /**
