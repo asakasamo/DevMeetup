@@ -343,6 +343,40 @@ export const store = new Vuex.Store({
             });
       },
 
+      fetchUserData({ commit, getters }) {
+         commit("setLoading", true);
+
+         // fetch registered meetups
+         firebase
+            .database()
+            .ref("/users/" + getters.user.id + "/registrations/")
+            .once("value")
+            .then((data) => {
+               commit("setLoading", true);
+
+               const registrations = data.val();
+               let registeredMeetups = [];
+               let fbRegistrationKeys = {};
+
+               for (let key in registrations) {
+                  registeredMeetups.push(registrations[key]);
+                  fbRegistrationKeys[registrations[key]] = key;
+               }
+
+               const updatedUser = {
+                  id: getters.user.id,
+                  registeredMeetups,
+                  fbRegistrationKeys
+               };
+
+               commit("setUser", updatedUser);
+               commit("setLoading", false);
+            })
+            .catch((error) => {
+               console.log(error);
+            });
+      },
+
       /**
        * Clears the error state
        */
