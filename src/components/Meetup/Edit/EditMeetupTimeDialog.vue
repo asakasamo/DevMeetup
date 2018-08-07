@@ -2,7 +2,7 @@
    <v-dialog width="350px" persistent v-model="editDialog">
 
       <!-- Activator button -->
-      <v-btn accent slot="activator">
+      <v-btn class="info ma-0" small slot="activator">
          Edit Time
       </v-btn>
 
@@ -11,11 +11,11 @@
          <v-container>
 
             <!-- Dialog box title -->
-            <v-layout row wrap>
+            <!-- v-layout row wrap>
                <v-flex xs12>
                   <v-card-title>Edit Meetup Time</v-card-title>
                </v-flex>
-            </v-layout>
+            </v-layout -->
 
             <!-- Inputs wrapper -->
             <v-layout row wrap>
@@ -26,7 +26,7 @@
                      <template>
                         <!-- Save button -->
                         <v-btn 
-                           class="blue--text darken-1" 
+                           class="success" 
                            flat 
                            @click="onSaveChanges"
                            >
@@ -37,11 +37,11 @@
                      
                         <!-- Close button -->
                         <v-btn 
-                           class="blue--text darken-1" 
+                           class="error" 
                            flat 
                            @click="editDialog = false"
                            >
-                           Close
+                           Cancel
                         </v-btn>
 
                      </template>                     

@@ -1,5 +1,5 @@
 <template>
-   <v-app>
+   <v-app class="blue lighten-5">
       <!-- Navigation Drawer -->
       <v-navigation-drawer v-model="sideNav" temporary absolute disable-resize-watcher>
          <v-list>
@@ -44,7 +44,8 @@
          <!-- Homepage link -->
          <v-toolbar-title>
             <router-link to="/" tag="span" style="cursor: pointer">
-               Meetup
+               <v-icon>sentiment_very_satisfied</v-icon>
+               WeMeetup
             </router-link>
          </v-toolbar-title>
          
@@ -89,6 +90,11 @@ export default {
    computed: {
       menuItems() {
          let menuItems = [
+            {
+               title: "View Meetups",
+               icon: "supervisor_account",
+               link: "/meetups"
+            },
             { title: "Sign up", icon: "face", link: "/signup" },
             { title: "Log in", icon: "lock_open", link: "/login" }
          ];

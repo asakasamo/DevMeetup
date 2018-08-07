@@ -2,7 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from "vue";
 import App from "./App";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 import router from "./router";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
@@ -43,6 +44,7 @@ new Vue({
          projectId: "wemeetup-asakasamo",
          storageBucket: "wemeetup-asakasamo.appspot.com"
       });
+
       firebase.auth().onAuthStateChanged((user) => {
          if (user) {
             this.$store.dispatch("autoLogIn", user);

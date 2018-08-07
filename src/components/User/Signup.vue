@@ -6,7 +6,7 @@
          </v-flex>
       </v-layout>
 
-      <v-layout row>
+      <v-layout row class="text-xs-center">
          <v-flex xs12 sm6 offset-sm3>
             <!-- Signup card wrapper -->
             <v-card>

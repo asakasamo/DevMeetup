@@ -2,7 +2,7 @@
    <v-dialog width="350px" persistent v-model="editDialog">
 
       <!-- Activator button -->
-      <v-btn fab accent slot="activator">
+      <v-btn fab accent small slot="activator">
          <v-icon>edit</v-icon>
       </v-btn>
 
@@ -11,11 +11,11 @@
          <v-container>
 
             <!-- Dialog box title -->
-            <v-layout row wrap>
+            <!-- v-layout row wrap>
                <v-flex xs12>
                   <v-card-title>Edit Meetup</v-card-title>
                </v-flex>
-            </v-layout>
+            </v-layout -->
 
             <!-- Inputs wrapper -->
             <v-layout row wrap>
@@ -29,6 +29,16 @@
                         id="title"
                         required
                         v-model="editedTitle"
+                        >
+                     </v-text-field>
+
+                     <!-- Edit Location -->
+                     <v-text-field 
+                        name="location" 
+                        label="Location" 
+                        id="location"
+                        required
+                        v-model="editedLocation"
                         >
                      </v-text-field>
                      
@@ -56,7 +66,7 @@
                      <!-- Save button -->
                      <v-btn 
                         flat 
-                        class="blue--text darken-1" 
+                        class="success" 
                         @click="onSaveChanges"
                         >
                         Save
@@ -67,7 +77,7 @@
                      <!-- Close button -->
                      <v-btn 
                         flat 
-                        class="blue--text darken-1" 
+                        class="error" 
                         @click="editDialog = false"
                         >
                         Close
@@ -88,17 +98,24 @@ export default {
       return {
          editDialog: false,
          editedTitle: this.meetup.title,
-         editedDescription: this.meetup.description
+         editedDescription: this.meetup.description,
+         editedLocation: this.meetup.location
       };
    },
    methods: {
       onSaveChanges() {
-         if (!this.editedTitle.trim() || !this.editedDescription.trim()) return;
+         if (
+            !this.editedTitle.trim() ||
+            !this.editedDescription.trim() ||
+            !this.editedLocation.trim()
+         )
+            return;
 
          this.editDialog = false;
          this.$store.dispatch("updateMeetupData", {
             id: this.meetup.id,
             title: this.editedTitle,
+            location: this.editedLocation,
             description: this.editedDescription
          });
       }

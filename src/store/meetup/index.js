@@ -1,4 +1,7 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/database";
+import "firebase/storage";
+import sampleMeetups from "./sampleMeetups";
 
 export default {
    state: {
@@ -31,6 +34,7 @@ export default {
          meetup.title = payload.title || meetup.title;
          meetup.description = payload.description || meetup.description;
          meetup.date = payload.date || meetup.date;
+         meetup.location = payload.location || meetup.location;
       }
    },
 
@@ -69,7 +73,7 @@ export default {
       },
 
       /**
-       * Creates a new user
+       * Creates a new meetup
        */
       createMeetup({ commit, getters }, payload) {
          const meetup = {
@@ -116,13 +120,15 @@ export default {
             )
             .then(() => {
                // commit the changes to the local store
-               commit("createMeetup", { ...meetup, key });
+               // commit("createMeetup", { ...meetup, key });
+               // update the store with the database data
+               // commit("loadMeetups");
             })
             .catch((error) => {
                console.log(error);
             });
 
-         commit("createMeetup", meetup);
+         // commit("createMeetup", meetup);
       },
 
       /**
@@ -143,6 +149,9 @@ export default {
          if (payload.date) {
             updateObj.date = payload.date;
          }
+         if (payload.location) {
+            updateObj.location = payload.location;
+         }
 
          // update the meetup in firebase
          firebase
@@ -159,6 +168,35 @@ export default {
                commit("setLoading", false);
                console.log(error);
             });
+      },
+
+      loadSampleMeetups({ getters }) {
+         // for each sample meetup
+         for (const meetupid of Object.keys(sampleMeetups)) {
+            const refPath = "meetups/" + meetupid + ".jpg";
+            firebase
+               .storage()
+               .ref(refPath)
+               .getDownloadURL() // fill in the image URLs and creatorId
+               .then((url) => {
+                  sampleMeetups[meetupid].imageURL = url;
+                  sampleMeetups[meetupid].creatorId = getters.user.id;
+               })
+               .then(() => {
+                  // then store it in the database
+                  firebase
+                     .database()
+                     .ref("meetups")
+                     .push(sampleMeetups[meetupid])
+                     .then(() => {})
+                     .catch((error) => {
+                        console.log(error);
+                     });
+               })
+               .catch((error) => {
+                  console.log(error);
+               });
+         }
       }
    },
 
@@ -169,7 +207,9 @@ export default {
        */
       loadedMeetups(state) {
          return state.loadedMeetups.sort(
-            (meetup1, meetup2) => meetup1.date > meetup2.date
+            (meetup1, meetup2) =>
+               new Date(meetup1.date).getTime() -
+               new Date(meetup2.date).getTime()
          );
       },
 

@@ -10,7 +10,7 @@
          <v-flex xs12 sm6 offset-sm3>
 
             <!-- Login card wrapper -->
-            <v-card>
+            <v-card class="text-xs-center">
                <v-card-text>
                   <form @submit.prevent="submitLogin">
                      <v-layout row>

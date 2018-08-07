@@ -2,9 +2,23 @@
    <v-dialog width="300px" persistent v-model="registerDialog">
 
       <!-- Activator button -->
-      <v-btn accent slot="activator">
-         {{ userIsRegistered ? "UnRegister" : "Register" }}
-      </v-btn>
+      <div slot="activator">
+         <v-layout v-if="userIsRegistered">
+            <v-chip 
+               text-color="white"
+               class="green"
+               >
+               <v-avatar>
+                  <v-icon>check_circle</v-icon>
+               </v-avatar>
+               You are registered
+            </v-chip>
+         </v-layout>
+
+         <v-btn v-else class="success">
+            Register
+         </v-btn>
+      </div>
 
       <!-- Main card wrapper -->
       <v-card>
