@@ -87,7 +87,7 @@ export default {
       /**
        * Unregisters a user from a meetup
        */
-      unregisterUserFromMeetup({ commit, getters }, payload) {
+      unregisterUserFromMeetup({ commit, getters, dispatch }, payload) {
          commit("setLoading", true);
          const user = getters.user;
 
@@ -101,7 +101,8 @@ export default {
             .child(fbRegistrationKey)
             .remove() // remove the registration from the database
             .then(() => {
-               commit("unregisterUserFromMeetup", payload);
+               // commit("unregisterUserFromMeetup", payload);
+               dispatch("fetchUserData");
                commit("setLoading", false);
             })
             .catch((error) => {
@@ -121,8 +122,10 @@ export default {
             .auth()
             .createUserWithEmailAndPassword(payload.email, payload.password)
             .then((userCredential) => {
+               // log the new user in
                const newUser = {
                   id: userCredential.user.uid,
+                  email: payload.email,
                   registeredMeetups: [],
                   fbRegistrationKeys: {}
                };
@@ -150,6 +153,7 @@ export default {
             .then((userCredential) => {
                const newUser = {
                   id: userCredential.user.uid,
+                  email: payload.email,
                   registeredMeetups: [],
                   fbRegistrationKeys: {}
                };
@@ -171,6 +175,7 @@ export default {
       autoLogIn({ commit }, payload) {
          commit("setUser", {
             id: payload.uid,
+            email: payload.email,
             registeredMeetups: [],
             fbRegistrationKeys: {}
          });
@@ -198,6 +203,7 @@ export default {
 
                const updatedUser = {
                   id: getters.user.id,
+                  email: getters.user.email,
                   registeredMeetups,
                   fbRegistrationKeys
                };

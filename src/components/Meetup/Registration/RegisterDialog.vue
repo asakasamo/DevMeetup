@@ -3,7 +3,7 @@
 
       <!-- Activator button -->
       <div slot="activator">
-         <v-layout v-if="userIsRegistered">
+         <v-layout v-if="userIsRegistered && !profile">
             <v-chip 
                text-color="white"
                class="green"
@@ -14,6 +14,13 @@
                You are registered
             </v-chip>
          </v-layout>
+
+         <v-btn 
+            icon
+            v-else-if="profile"
+            >
+            <v-icon color="red">cancel</v-icon>
+         </v-btn>
 
          <v-btn v-else class="success">
             Register
@@ -27,8 +34,10 @@
             <!-- Dialog box title -->
             <v-layout row wrap>
                <v-flex xs12>
+                  <h3>
                   <v-card-title v-if="!userIsRegistered">Register for meetup?</v-card-title>
                   <v-card-title v-else>Cancel Registration?</v-card-title>
+                  </h3>
                </v-flex>
             </v-layout>
 
@@ -51,7 +60,7 @@
                      <!-- Confirm button -->
                      <v-btn 
                         flat 
-                        class="green--text darken-1" 
+                        class="blue--text darken-1" 
                         @click="onConfirm"
                         >
                         Confirm
@@ -65,7 +74,7 @@
                         class="red--text darken-1" 
                         @click="registerDialog = false"
                         >
-                        Cancel
+                        Never Mind
                      </v-btn>
 
                   </v-card-actions>
@@ -78,7 +87,7 @@
 
 <script>
 export default {
-   props: ["meetupId"],
+   props: ["meetupId", "profile"],
    data() {
       return {
          registerDialog: false
@@ -100,6 +109,8 @@ export default {
          } else {
             this.$store.dispatch("registerUserForMeetup", this.meetupId);
          }
+
+         this.registerDialog = false;
       }
    }
 };

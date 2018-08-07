@@ -108,8 +108,9 @@ export default {
             !this.editedTitle.trim() ||
             !this.editedDescription.trim() ||
             !this.editedLocation.trim()
-         )
+         ) {
             return;
+         }
 
          this.editDialog = false;
          this.$store.dispatch("updateMeetupData", {

@@ -19,7 +19,6 @@ export default {
        */
       createMeetup(state, payload) {
          state.loadedMeetups.push(payload);
-         console.log(payload);
       },
 
       /**
@@ -228,6 +227,13 @@ export default {
       loadedMeetup(state) {
          return (meetupId) =>
             state.loadedMeetups.find((meetup) => meetup.id === meetupId);
+      },
+
+      getMeetupsByCreator(state) {
+         return (creatorId) =>
+            state.loadedMeetups.filter(
+               (meetup) => meetup.creatorId === creatorId
+            );
       }
    }
 };
