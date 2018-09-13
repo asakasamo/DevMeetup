@@ -45,7 +45,7 @@
          <v-toolbar-title>
             <router-link to="/" tag="span" style="cursor: pointer">
                <v-icon>sentiment_very_satisfied</v-icon>
-               WeMeetup
+               DevMeetup
             </router-link>
          </v-toolbar-title>
          
