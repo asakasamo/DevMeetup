@@ -50,6 +50,5 @@ export default new Router({
          name: "Signup",
          component: Signup
       }
-   ],
-   mode: "history"
+   ]
 });
