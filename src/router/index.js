@@ -50,5 +50,8 @@ export default new Router({
          name: "Signup",
          component: Signup
       }
-   ]
+   ],
+   scrollBehavior() {
+      return { x: 0, y: 0 };
+   }
 });
