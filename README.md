@@ -1,6 +1,14 @@
-# meetup
+# DevMeetup
 
-> A meetup web application built in Vue.js
+> A Meetup clone built in Vue.js.
+> 
+> [Demo](https://asakasamo.github.io/DevMeetup/)
+
+## Tools used
+- [Vuex](https://vuex.vuejs.org/) - State management (data store)
+- [Vuetify](https://vuetifyjs.com/en/) - Material design & components
+- [Firebase](https://firebase.google.com/docs/) - Database linking & user authentication
+- [Moment.js](https://momentjs.com/) - Time & date-based logic
 
 ## Build Setup
 
@@ -17,5 +25,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
