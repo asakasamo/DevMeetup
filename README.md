@@ -8,9 +8,10 @@ A Meetup clone built in Vue.js.
 - [Vuetify](https://vuetifyjs.com/en/) - Material design & components
 - [Firebase](https://firebase.google.com/docs/) - Database linking & user authentication
 - [Moment.js](https://momentjs.com/) - Time & date-based logic
+- [GitHub Pages](https://pages.github.com) - Free hosting, directly from the repository!
+- [Vue-gh-pages](https://www.npmjs.com/package/vue-gh-pages) - A clean way of deploying to Github Pages
 
 ## Build Setup
-
 ``` bash
 # install dependencies
 npm install
