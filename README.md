@@ -1,7 +1,6 @@
 # DevMeetup
 
-> A Meetup clone built in Vue.js.
-> 
+A Meetup clone built in Vue.js.
 > [Demo](https://asakasamo.github.io/DevMeetup/)
 
 ## Tools used
